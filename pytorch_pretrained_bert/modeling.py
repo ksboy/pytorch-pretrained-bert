@@ -725,10 +725,13 @@ class BertPreTrainedModel(nn.Module):
         old_keys = []
         new_keys = []
 
-        for key in state_dict.keys():
-            print(key)
-            if pop_classifier_layer and key.startswith("classifier"):
-                state_dict.pop(key)
+        if pop_classifier_layer:
+            print(state_dict.keys())
+            state_dict_keys = list(state_dict.keys())
+            for key in state_dict_keys:
+                if key.startswith("classifier"):
+                    print("pop", key)
+                    state_dict.pop(key)
 
         for key in state_dict.keys():
             new_key = None
