@@ -656,6 +656,8 @@ class BertPreTrainedModel(nn.Module):
         kwargs.pop('cache_dir', None)
         from_tf = kwargs.get('from_tf', False)
         kwargs.pop('from_tf', None)
+        pop_classifier_layer = kwargs.get('pop_classifier_layer', False)
+        kwargs.pop('pop_classifier_layer', None)
 
         if pretrained_model_name_or_path in PRETRAINED_MODEL_ARCHIVE_MAP:
             archive_file = PRETRAINED_MODEL_ARCHIVE_MAP[pretrained_model_name_or_path]
@@ -722,6 +724,12 @@ class BertPreTrainedModel(nn.Module):
         # Load from a PyTorch state_dict
         old_keys = []
         new_keys = []
+
+        for key in state_dict.keys():
+            print(key)
+            if pop_classifier_layer and key.startswith("classifier"):
+                state_dict.pop(key)
+
         for key in state_dict.keys():
             new_key = None
             if 'gamma' in key:
